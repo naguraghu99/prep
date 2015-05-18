@@ -21,6 +21,7 @@ public:
  
 Test & Test::operator = (const Test &t)
 {
+	     cout<<"Assignment  operator  is invoked "<<endl;
    // Check for self assignment
    if(this != &t)
      *ptr = *(t.ptr);
