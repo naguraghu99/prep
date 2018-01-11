@@ -24,7 +24,7 @@
  *			Basically has  products class objects
  *			- Inventory [InStock and Sales Done]
  *			- Interface to update the inventory
- *			- Discount
+ *			- Discount class
  *			- cart for checkout
  *			- Customers
  *		Products
@@ -39,9 +39,9 @@
  * */
 
 #include <iostream>
-#include <stllib.h>
 using namespace std;
 
-int main (){
+int main() {
+	cout << "!!!Hello Welcome to store!!!" << endl;
 	return 0;
 }
