@@ -1,37 +1,40 @@
 #include <string.h>
 #include <iostream>
-#include "product.h"
 #include <map>
+#include "Product.h"
 using namespace std;
 
 //cart has products
 class Cart {
-
+private:
 	// map of item id and quantity
-	map<int,int> items;
-	map<int,Product> productmap;
-	float   totalprice;
+	map<string,int> items;
+	map<string,Product> pidMap;
 
 public:
-	Cart(){
-		totalprice = 0;
-	}
-	~Cart(){
-		items.clear();
-		productmap.clear();
-		totalprice = 0;
-	}
-	void addTocart(Product p){
+	void addTocart(Product p,int quantity){
 		//if item already exists in the cart increment the quantity
-		if(productmap[p.id]){
+		if(items[p.id]){
 			items[p.id] +=1;
 		}else {
-			productmap[p.id] = p;
-			items[p.id] += 1;
+			pidMap.insert(pair<string,Product>(p.id,p));
+			items[p.id] = quantity;
 		}
 	}
-	void deleteFromCart(Product p){
-		productmap.erase(p.id);
-		items.erase(p.id);
+	void deleteFromCart(string pid){
+		items.erase(pid);
+		pidMap.erase(pid);
+	}
+	map<string,int>& getItems(){
+		return items;
+	}
+	map<string,Product>& getPdMap(){
+			return pidMap;
+	}
+	void printCart(){
+		map<string,Product>::iterator itemiter = pidMap.begin();
+		for(;itemiter!=pidMap.end();itemiter++){
+			cout<<itemiter->first<<"  "<<"  "<<items[itemiter->first]<<"  "<<endl;
+		}
 	}
 };

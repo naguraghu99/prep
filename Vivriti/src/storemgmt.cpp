@@ -24,7 +24,7 @@
  *			Basically has  products class objects
  *			- Inventory [InStock and Sales Done]
  *			- Interface to update the inventory
- *			- Discount class
+ *			- Discount
  *			- cart for checkout
  *			- Customers
  *		Products
@@ -39,9 +39,46 @@
  * */
 
 #include <iostream>
+#include "customer.h"
 using namespace std;
 
 int main() {
-	cout << "!!!Hello Welcome to store!!!" << endl;
+	cout << "!!!Hello Welcome to store!!!" << endl;\
+	// Create a store object which will create inventory and checkoutregister objects and initializes them
+	store* mystore = store::getStore();
+
+	// Creating customer objects
+	Customer *c1 = new Customer("nagu", 12345);
+	Customer *c2 = new Customer("raghu", 5678);
+
+	// Customers will add products in the store to his cart
+	// Assumption here is the products are physically available so need not check the availability
+	Product p = mystore->getProductById("BISGD001");
+	c1->cart->addTocart(p, 3);
+	c2->cart->addTocart(p, 5);
+	p = mystore->getProductById("OILSUN0002");
+	c1->cart->addTocart(p, 10);
+	p = mystore->getProductById("CHIPS0002");
+	c2->cart->addTocart(p, 5);
+
+	mystore->addProductToStore("BISMG0001", "FOOD", 9.5,50,3);
+	mystore->addProductToStore("BISMG0002", "FOOD", 20.5,50,3);
+	p = mystore->getProductById("BISMG0001");
+	c1->cart->addTocart(p, 4);
+	c2->cart->addTocart(p, 3);
+	p = mystore->getProductById("BISMG0002");
+	c1->cart->addTocart(p, 6);
+	c2->cart->addTocart(p, 7);
+
+	// store will initiate checkout
+	// Store will update the inventory, generate bill and sales numbers
+	c1->checkoutBill = mystore->checkout(c1->cart);
+	c2->checkoutBill = mystore->checkout(c2->cart);
+
+	cout<<"BILL FOR CUSTOMER "<<c1->getName()<<endl;
+	c1->checkoutBill.print_bill();
+	cout<<"BILL FOR CUSTOMER "<<c2->getName()<<endl;
+	c2->checkoutBill.print_bill();
+
 	return 0;
 }

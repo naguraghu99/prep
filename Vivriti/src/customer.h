@@ -1,7 +1,6 @@
 #include<string.h>
 #include<iostream>
-#include "cart.h"
-#include "product.h"
+#include "store.h"
 using namespace std;
 
 // Customer can add product to cart
@@ -10,19 +9,24 @@ using namespace std;
 // Customer can checkout
 class payment {
 	string cardNumber;
-	float  Balance;
-	string currency;
+	int pin;
+	int cvv;
 };
-class Customer{
+class Customer {
 private:
 	string name;
-	int	   mobileNum;
+	int mobileNum;
 	string payment;
-	Cart  cart;
 public:
-	Customer(string name,int mob_num):string(name),mobileNum(mob_num){
+	Cart* cart;
+	bill checkoutBill;
+public:
+	Customer(string name, int mob_num) :
+			name(name), mobileNum(mob_num) {
 		cart = new Cart();
 	}
-
+	string getName(){
+		return name;
+	}
 
 };
