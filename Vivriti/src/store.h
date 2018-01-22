@@ -17,15 +17,16 @@ private:
 	map<string, int> totalsale; //<prodId,numitemssold>
 public:
 	inventory() {
-		itemQuantity.insert(pair<string,int>("BISGD001",50));
-		Product p1("BISGD001","FOOD", 9.5,3);
-		productCatalog.insert(pair<string,Product>("BISGD001",p1));
-		itemQuantity.insert(pair<string,int>("OILSUN0002",50));
-		Product p2("OILSUN0002","FOOD", 9.5,3);
-		productCatalog.insert(pair<string,Product>("OILSUN0002",p2));
-		itemQuantity.insert(pair<string,int>("CHIPS0002",50));
-		Product p3("CHIPS0002","FOOD", 9.5,3);
-		productCatalog.insert(pair<string,Product>("CHIPS0002",p3));
+		//Initializing with products
+		itemQuantity.insert(pair<string, int>("BISGD0001", 50));
+		Product p1("BISGD0001", "FOOD", 9.5, 3);
+		productCatalog.insert(pair<string, Product>("BISGD0001", p1));
+		itemQuantity.insert(pair<string, int>("OILSU0002", 50));
+		Product p2("OILSU0002", "FOOD", 9.5, 3);
+		productCatalog.insert(pair<string, Product>("OILSU0002", p2));
+		itemQuantity.insert(pair<string, int>("CHIPS0002", 50));
+		Product p3("CHIPS0002", "FOOD", 9.5, 3);
+		productCatalog.insert(pair<string, Product>("CHIPS0002", p3));
 	}
 	~inventory() {
 		itemQuantity.clear();
@@ -36,8 +37,8 @@ public:
 	void addProductToInventory(string pid, string category, float price,
 			int quantity, int discount) {
 		Product p(pid, category, price, discount);
-		productCatalog.insert(pair<string, Product>(pid, p));
-		itemQuantity.insert(pair<string, int>(pid, quantity));
+		productCatalog[pid] = p;
+		itemQuantity[pid] = quantity;
 	}
 	// Remove products from inventory
 	void removeProductFromInventory(string productId) {
@@ -47,14 +48,16 @@ public:
 	void updateInventory(map<string, int> items) {
 		map<string, int>::iterator itemsiter = items.begin();
 		for (; itemsiter != items.end(); itemsiter++) {
-			if (!itemQuantity[itemsiter->first])
-				continue;
-			// update the quantity
-			itemQuantity[itemsiter->first] = itemQuantity[itemsiter->first]
-					- (itemsiter->second);
+			if (productCatalog.find(itemsiter->first) == productCatalog.end()) {
+				cout<<"Item not found so adding it"<<endl;
+			} else {
+				// update the quantity
+				itemQuantity[itemsiter->first] = itemQuantity[itemsiter->first]
+						- (itemsiter->second);
+			}
 			// update sale
 			totalsale[itemsiter->first] = totalsale[itemsiter->first]
-					+ (itemsiter->second);
+					+ itemsiter->second;
 			if (itemQuantity[itemsiter->first] == 0) {
 				productCatalog.erase(itemsiter->first);
 			}
@@ -66,13 +69,22 @@ public:
 	Product getProductById(string prodId) {
 		return productCatalog[prodId];
 	}
+	void getSale() {
+		map<string, int>::iterator saleIter = totalsale.begin();
+		cout<<endl;
+		cout << "Product                   Sale" << endl;
+		cout << "******************************" << endl;
+		for (; saleIter != totalsale.end(); saleIter++) {
+			cout << saleIter->first <<"                "<< saleIter->second
+					<< endl;
+		}
+	}
 };
-class checkoutregister: public inventory {
+class checkoutregister{
 public:
 	bill checkout(Cart *cart) {
 		int tax = 3;
-		// Updates cart and generated bill
-		updateInventory(cart->getItems());
+		// generated bill
 		bill cartBill(*cart, tax);
 		return cartBill;
 	}
@@ -90,6 +102,8 @@ private:
 		// Clear inventory
 		if (storeInventory)
 			delete storeInventory;
+		if(mystore)
+			delete mystore;
 	}
 public:
 	static store* getStore();
@@ -104,6 +118,12 @@ public:
 	}
 	Product getProductById(string id) {
 		return storeInventory->getProductById(id);
+	}
+	void getSale() {
+		storeInventory->getSale();
+	}
+	void updateInventory(map<string,int> items){
+		storeInventory->updateInventory(items);
 	}
 };
 store* store::mystore = NULL;

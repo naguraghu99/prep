@@ -49,14 +49,16 @@ int main() {
 
 	// Creating customer objects
 	Customer *c1 = new Customer("nagu", 12345);
+	c1->addDiscount(3);
 	Customer *c2 = new Customer("raghu", 5678);
+	c2->addDiscount(10);
 
 	// Customers will add products in the store to his cart
 	// Assumption here is the products are physically available so need not check the availability
-	Product p = mystore->getProductById("BISGD001");
+	Product p = mystore->getProductById("BISGD0001");
 	c1->cart->addTocart(p, 3);
 	c2->cart->addTocart(p, 5);
-	p = mystore->getProductById("OILSUN0002");
+	p = mystore->getProductById("OILSU0002");
 	c1->cart->addTocart(p, 10);
 	p = mystore->getProductById("CHIPS0002");
 	c2->cart->addTocart(p, 5);
@@ -74,11 +76,14 @@ int main() {
 	// Store will update the inventory, generate bill and sales numbers
 	c1->checkoutBill = mystore->checkout(c1->cart);
 	c2->checkoutBill = mystore->checkout(c2->cart);
-
+	mystore->updateInventory(c1->cart->getItems());
+	mystore->updateInventory(c2->cart->getItems());
 	cout<<"BILL FOR CUSTOMER "<<c1->getName()<<endl;
+	c1->checkoutBill.customer_discount = c1->calculateDiscount();
+	c2->checkoutBill.customer_discount = c2->calculateDiscount();
 	c1->checkoutBill.print_bill();
 	cout<<"BILL FOR CUSTOMER "<<c2->getName()<<endl;
 	c2->checkoutBill.print_bill();
-
+    mystore->getSale();
 	return 0;
 }

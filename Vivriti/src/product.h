@@ -7,22 +7,23 @@
  * */
 #include<iostream>
 #include<string.h>
+#include "discount.h"
 using namespace std;
 
-class Product{
+class Product: public discount{
 public:
 	string id;
 private:
 	string category;
 	float price;
-	int discount; //In percentage
 public:
 	Product(){
 		price = 0;
-		discount = 0;
+		setDiscount(0);
 	}
-	Product(string id, string category, float price, int disc) :
-			id(id), category(category), price(price), discount(disc) {
+	Product(string id, string category, float price, float disc) :
+			id(id), category(category), price(price){
+		setDiscount(disc);
 
 	}
 	void modify_price(float modprice) {
@@ -34,13 +35,13 @@ public:
 		price = 0;
 	}
 	void modify_discount(int disc) {
-		discount = disc;
+		setDiscount(disc);
 	}
 	float getPrice(){
 		return price;
 	}
-	int getDiscount(){
-		return discount;
+	virtual float calculateDiscount(){
+		return (price*getDiscount())/100;
 	}
 
 };
